@@ -31,7 +31,7 @@ class MyHome extends StatefulWidget {
 class _MyHomeState extends State<MyHome> {
   List<String> banner = [
     "asset/imgs/banner.jpg",
-    "asset/imgs/banner.jpg",
+    "asset/imgs/banner2.jpg",
     "asset/imgs/banner3.jpg",
     "asset/imgs/banner4.jpg",
     "asset/imgs/banner5.jpg"
@@ -42,7 +42,7 @@ class _MyHomeState extends State<MyHome> {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
-        leading: Icon(Icons.arrow_back),
+        leading: Icon(Icons.remove),
         actions: <Widget>[
           Padding(
             padding: const EdgeInsets.only(right: 15),
