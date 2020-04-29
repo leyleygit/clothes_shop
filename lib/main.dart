@@ -42,7 +42,7 @@ class _MyHomeState extends State<MyHome> {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
-        leading: Icon(Icons.remove),
+        leading: Icon(Icons.arrow_back_ios),
         actions: <Widget>[
           Padding(
             padding: const EdgeInsets.only(right: 15),
