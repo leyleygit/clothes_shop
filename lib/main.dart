@@ -31,7 +31,7 @@ class MyHome extends StatefulWidget {
 class _MyHomeState extends State<MyHome> {
   List<String> banner = [
     "asset/imgs/banner.jpg",
-    "asset/imgs/banner2.jpg",
+    "asset/imgs/banner.jpg",
     "asset/imgs/banner3.jpg",
     "asset/imgs/banner4.jpg",
     "asset/imgs/banner5.jpg"
