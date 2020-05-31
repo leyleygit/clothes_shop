@@ -10,7 +10,7 @@ class ProductDetails extends StatefulWidget {
   _ProductDetailsState createState() => _ProductDetailsState();
 }
 
-//change
+
 
 class _ProductDetailsState extends State<ProductDetails> {
   bool onTap = false;
