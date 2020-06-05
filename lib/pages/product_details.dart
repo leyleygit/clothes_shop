@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:new_project/model/size_select.dart';
+import 'package:new_project/pages/buyinfo.dart';
 
 class ProductDetails extends StatefulWidget {
   final String img;
@@ -30,7 +31,7 @@ class _ProductDetailsState extends State<ProductDetails> {
         actions: <Widget>[
           Padding(
             padding: const EdgeInsets.only(right: 20),
-            child: Icon(Icons.sort),
+            child: Icon(Icons.notifications_active),
           )
         ],
       ),
@@ -47,8 +48,12 @@ class _ProductDetailsState extends State<ProductDetails> {
             child: CupertinoButton(
               padding: EdgeInsets.symmetric(horizontal: 20),
               onPressed: () {
-                showModalBottomSheet(backgroundColor: Colors.transparent,
-                    context: context, builder: (_) => BottomSheetWidget());
+                return showModalBottomSheet(
+                  backgroundColor: Colors.transparent,
+                    context: context,
+                    builder: (_) {
+                      return Buyinfo();
+                    });
               },
               borderRadius: BorderRadius.circular(15),
               color: Colors.purpleAccent,

@@ -17,9 +17,16 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   Category currentCategory;
   AnimationController controllerpage;
   Animation animationpage;
+  AnimationController controllerNotification;
+  Animation animationnoti;
   List<Product> filterClothes = [];
   @override
   void initState() {
+    controllerNotification = AnimationController(vsync: this, duration: Duration(milliseconds: 500));
+    animationnoti = CurvedAnimation(curve: Curves.fastOutSlowIn, parent: controllerNotification)..addListener(() {
+      setState(() {
+      });
+    });
     controllerpage =
         AnimationController(vsync: this, duration: Duration(milliseconds: 500));
     animationpage =
@@ -162,6 +169,20 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                             }
                           },
                         ),
+                        actions: <Widget>[
+                          Padding(
+                            padding: const EdgeInsets.only(right: 15),
+                            child: InkWell(
+                                onTap: (){
+                                  if(animationnoti.value == 0){
+                                    controllerNotification.forward(from: 0.0);
+                                  }else{
+                                    controllerNotification.reverse(from: 1.0);
+                                  }
+                                },
+                                child: Icon(Icons.notifications_active)),
+                          )
+                        ],
                       ),
                     ),
                   ),
@@ -261,8 +282,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                   size: size, animation: animationpage.value)),
           Transform(
             transform: Matrix4.translationValues(
-              size.width,
               0.0,
+              size.height-(size.height * 0.7*(animationnoti.value)),
               0.0,
             ),
             child: notificaAnimated(size: size),
@@ -287,7 +308,7 @@ class notificaAnimated extends StatelessWidget {
       //Notification
       width: size.width,
       height: size.height,
-      color: Colors.yellow,
+      color: Colors.blueGrey,
     );
   }
 }
