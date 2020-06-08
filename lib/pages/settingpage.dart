@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:new_project/model/itemsSetting.dart';
 import 'package:new_project/model/page_reveal.dart';
+import 'package:new_project/pages/accountpage.dart';
 
 class animatedSettingpage extends StatefulWidget {
 final dynamic animation;
@@ -55,7 +56,9 @@ class _animatedSettingpageState extends State<animatedSettingpage> {
               ItemesSetting(
                 icon: Icons.perm_identity,
                 title: "Account",
-                press: (){},
+                press: (){
+                  Navigator.push(context, MaterialPageRoute(builder: (context)=>AccountPage()));
+                },
               ),
               ItemesSetting(
                 icon: Icons.shopping_basket,

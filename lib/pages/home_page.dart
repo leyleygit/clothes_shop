@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
@@ -6,6 +8,8 @@ import 'package:new_project/model/page_reveal.dart';
 import 'package:new_project/model/product.dart';
 import 'package:new_project/pages/product_details.dart';
 import 'package:new_project/pages/settingpage.dart';
+
+import 'notification.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -20,15 +24,19 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   AnimationController controllerNotification;
   Animation animationnoti;
   List<Product> filterClothes = [];
+  bool onNotificationTap;
   @override
   void initState() {
-    controllerNotification = AnimationController(vsync: this, duration: Duration(milliseconds: 500));
-    animationnoti = CurvedAnimation(curve: Curves.fastOutSlowIn, parent: controllerNotification)..addListener(() {
-      setState(() {
-      });
-    });
-    controllerpage =
+    onNotificationTap = false;
+    controllerNotification =
         AnimationController(vsync: this, duration: Duration(milliseconds: 500));
+    animationnoti = CurvedAnimation(
+        curve: Curves.fastOutSlowIn, parent: controllerNotification)
+      ..addListener(() {
+        setState(() {});
+      });
+    controllerpage = AnimationController(
+        value: 0.0, vsync: this, duration: Duration(milliseconds: 500));
     animationpage =
         CurvedAnimation(curve: Curves.fastOutSlowIn, parent: controllerpage)
           ..addListener(() {
@@ -139,176 +147,156 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
 
-    return Scaffold(
-      body: Stack(
-        children: <Widget>[
-          Transform(
-            transform: Matrix4.translationValues(
-                0.0 + (size.width * 0.67 * (animationpage.value)), 0.0, 0.0),
-            child: CustomScrollView(
-              physics: BouncingScrollPhysics(),
-              slivers: <Widget>[
-                SliverToBoxAdapter(
-                  child: Container(
-                    height: 100,
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(20.0 * animationpage.value)),
-                      child: AppBar(
-//                        backgroundColor: Colors.blue,
-                        leading: IconButton(
-                          icon: AnimatedIcon(
-                            icon: AnimatedIcons.menu_close,
-                            progress: animationpage,
-                          ),
-                          onPressed: () {
-                            if (animationpage.value == 0) {
-                              controllerpage.forward(from: 0.0);
-                            } else {
-                              controllerpage.reverse(from: 1.0);
-                            }
+    return Stack(
+      children: [
+        Transform(
+          transform: Matrix4.translationValues(
+              0.0 + (size.width * 0.67 * (animationpage.value)),
+              0.0,
+              0.0),
+          child: Scaffold(
+            appBar: AppBar(
+              backgroundColor: Colors.white,
+              leading: IconButton(
+                icon: AnimatedIcon(
+                  icon: AnimatedIcons.menu_close,
+                  progress: animationpage,
+                ),
+                onPressed: () {
+                  if (animationpage.value == 0) {
+                    controllerpage.forward(from: 0.0);
+                  } else {
+                    controllerpage.reverse(from: 1.0);
+                  }
+                },
+              ),
+
+              actions: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.only(right: 15),
+                  child: InkWell(
+                      onTap: () {
+                        setState(() {
+                          onNotificationTap = !onNotificationTap;
+                          if (animationnoti.value == 0) {
+                            controllerNotification.forward(from: 0.0);
+                          } else {
+                            controllerNotification.reverse(from: 1.0);
+                          }
+                        });
+                      },
+                      child: Icon(Icons.notifications_active)),
+                )
+              ],
+            ),
+            body: Stack(
+              children: <Widget>[
+                CustomScrollView(
+                  physics: BouncingScrollPhysics(),
+                  slivers: <Widget>[
+                    SliverToBoxAdapter(
+                      child: Container(
+                        width: size.width,
+                        height: size.height / 4,
+                        child: Swiper(
+                          controller: new SwiperController(),
+                          autoplay: true,
+                          itemBuilder: (_, index) {
+                            return Container(
+                              width: size.width,
+                              height: size.height / 4,
+                              decoration: BoxDecoration(
+                                  image: DecorationImage(
+                                      fit: BoxFit.cover,
+                                      image: AssetImage(banner[index]))),
+                            );
                           },
+                          itemCount: 5,
                         ),
-                        actions: <Widget>[
-                          Padding(
-                            padding: const EdgeInsets.only(right: 15),
-                            child: InkWell(
-                                onTap: (){
-                                  if(animationnoti.value == 0){
-                                    controllerNotification.forward(from: 0.0);
-                                  }else{
-                                    controllerNotification.reverse(from: 1.0);
-                                  }
-                                },
-                                child: Icon(Icons.notifications_active)),
-                          )
-                        ],
                       ),
                     ),
-                  ),
-                ),
-                SliverToBoxAdapter(
-                  child: Container(
-                    width: size.width,
-                    height: size.height / 4,
-                    child: Swiper(
-                      controller: new SwiperController(),
-                      autoplay: true,
-                      itemBuilder: (_, index) {
-                        return Container(
-                          width: size.width,
-                          height: size.height / 4,
-                          decoration: BoxDecoration(
-                              image: DecorationImage(
-                                  fit: BoxFit.cover,
-                                  image: AssetImage(banner[index]))),
+                    SliverPersistentHeader(
+                      pinned: true,
+                      delegate: _BuildHeaderDelegate(
+                        minHeight: 50,
+                        maxHeight: 50,
+                        child: Column(
+                          children: <Widget>[
+                            Container(
+                              height: 50,
+                              decoration: BoxDecoration(color: Colors.white),
+                              child: TabBar(
+                                labelColor: Colors.black,
+                                onTap: (int index) {
+                                  filterClothes = [];
+                                  setState(() {
+                                    filterClothes = iteamclothe
+                                        .where((Product product) =>
+                                            product.category ==
+                                            categories[index].id)
+                                        .toList();
+                                  });
+                                },
+                                labelStyle: TextStyle(
+                                    fontSize: 17,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.purpleAccent),
+                                controller: tabController,
+                                tabs: List.generate(categories.length, (index) {
+                                  return Text(
+                                      '${categories[index].name.toString().toUpperCase()}');
+                                }),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    SliverGrid(
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          childAspectRatio: 0.7,
+                          crossAxisCount: 2,
+                          crossAxisSpacing: 5,
+                          mainAxisSpacing: 5),
+                      delegate: SliverChildBuilderDelegate(
+                          (BuildContext context, int index) {
+                        Product product = filterClothes[index];
+                        return ItemDetail(
+                          product: product,
+                          size: size,
+                          index: index,
                         );
-                      },
-                      itemCount: 5,
+                      }, childCount: filterClothes.length),
                     ),
-                  ),
-                ),
-                SliverPersistentHeader(
-                  pinned: true,
-                  delegate: _BuildHeaderDelegate(
-                    minHeight: 80,
-                    maxHeight: 80,
-                    child: Column(
-                      children: <Widget>[
-                        SizedBox(
-                          height: 30,
-                          child: Container(
-                            color: Colors.white,
-                          ),
-                        ),
-                        Container(
-                          height: 50,
-                          decoration: BoxDecoration(color: Colors.white),
-                          child: TabBar(
-                            labelColor: Colors.black,
-                            onTap: (int index) {
-                              filterClothes = [];
-                              setState(() {
-                                filterClothes = iteamclothe
-                                    .where((Product product) =>
-                                        product.category ==
-                                        categories[index].id)
-                                    .toList();
-                              });
-                            },
-                            labelStyle: TextStyle(
-                                fontSize: 17,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.purpleAccent),
-                            controller: tabController,
-                            tabs: List.generate(categories.length, (index) {
-                              return Text(
-                                  '${categories[index].name.toString().toUpperCase()}');
-                            }),
-                          ),
-                        ),
-                      ],
+                    SliverToBoxAdapter(
+                      child: Container(
+                        height: 10,
+                      ),
                     ),
+                  ],
+                ),
+                Transform(
+                  transform: Matrix4.translationValues(
+                    0.0,
+                    size.height - (size.height * animationnoti.value),
+                    0.0,
                   ),
-                ),
-                SliverGrid(
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      childAspectRatio: 0.7,
-                      crossAxisCount: 2,
-                      crossAxisSpacing: 5,
-                      mainAxisSpacing: 5),
-                  delegate: SliverChildBuilderDelegate(
-                      (BuildContext context, int index) {
-                    Product product = filterClothes[index];
-                    return ItemDetail(
-                      product: product,
-                      size: size,
-                      index: index,
-                    );
-                  }, childCount: filterClothes.length),
-                ),
-                SliverToBoxAdapter(
-                  child: Container(
-                    height: 100,
+                  child: Notifcation(
+                    onTap: onNotificationTap,
                   ),
                 ),
               ],
             ),
           ),
-          Transform(
-              transform: Matrix4.translationValues(
-                  -size.width * (1.0 - animationpage.value), 0, 0.0),
-              child: animatedSettingpage(
-                  size: size, animation: animationpage.value)),
-          Transform(
+        ),
+        Transform(
             transform: Matrix4.translationValues(
-              0.0,
-              size.height-(size.height * 0.7*(animationnoti.value)),
-              0.0,
-            ),
-            child: notificaAnimated(size: size),
-          )
-        ],
-      ),
-    );
-  }
-}
-
-class notificaAnimated extends StatelessWidget {
-  const notificaAnimated({
-    Key key,
-    @required this.size,
-  }) : super(key: key);
-
-  final Size size;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      //Notification
-      width: size.width,
-      height: size.height,
-      color: Colors.blueGrey,
+                -size.width * (1.0 - animationpage.value), 0, 0.0),
+            child: Material(
+              child: animatedSettingpage(
+                  size: size, animation: animationpage.value),
+            )),
+      ],
     );
   }
 }
