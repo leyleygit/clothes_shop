@@ -156,7 +156,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
               0.0),
           child: Scaffold(
             appBar: AppBar(
-              backgroundColor: Colors.black,
+              backgroundColor: Colors.white,
               leading: IconButton(
                 icon: AnimatedIcon(
                   icon: AnimatedIcons.menu_close,
